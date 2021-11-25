@@ -21,6 +21,7 @@ from torch import nn
 import torch
 from scipy.ndimage.filters import gaussian_filter
 from typing import Union, Tuple, List
+from nnunet.utilities.nd_softmax import softmax_helper
 
 from torch.cuda.amp import autocast
 
@@ -62,7 +63,8 @@ class SegmentationNetwork(NeuralNetwork):
         # depending on the loss, we do not hard code a nonlinearity into the architecture. To aggregate predictions
         # during inference, we need to apply the nonlinearity, however. So it is important to let the newtork know what
         # to apply in inference. For the most part this will be softmax
-        self.inference_apply_nonlin = lambda x: x  # softmax_helper
+        # self.inference_apply_nonlin = lambda x: x  # softmax_helper
+        self.inference_apply_nonlin = softmax_helper  # softmax_helper
 
         # This is for saving a gaussian importance map for inference. It weights voxels higher that are closer to the
         # center. Prediction at the borders are often less accurate and are thus downweighted. Creating these Gaussians
